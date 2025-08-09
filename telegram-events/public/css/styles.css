@@ -1,0 +1,106 @@
+:root {
+    --bg: #ffffff;
+    --text: #111111;
+    --hint: #6b7280;
+    --link: #0a84ff;
+    --card: #f5f5f5;
+    --border: #e5e7eb;
+    --button: #0a84ff;
+    --button-text: #ffffff;
+}
+
+html.dark {
+    --bg: #0f0f0f;
+    --text: #f5f5f5;
+    --hint: #9aa0a6;
+    --link: #5ea0ff;
+    --card: #1a1a1a;
+    --border: #2a2a2a;
+    --button: #5ea0ff;
+    --button-text: #0b0b0b;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+a { color: var(--link); }
+.event-card { background: var(--card); border: 1px solid var(--border); }
+button {
+    background: var(--button);
+    color: var(--button-text);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not(.force-light):not(.force-dark) {
+        /* mirror html.dark values if no explicit override */
+        --bg: #0f0f0f; --text: #f5f5f5; --hint: #9aa0a6; --link: #5ea0ff;
+        --card: #1a1a1a; --border: #2a2a2a; --button: #5ea0ff; --button-text: #0b0b0b;
+    }
+}
+
+h1 {
+    margin-bottom: 24px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="date"],
+input[type="datetime-local"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #1976d2;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #115293;
+}
+
+.event-card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 16px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.event-thumb {
+    max-width: 100%;
+    height: auto;
+    margin: 8px 0;
+    border-radius: 4px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 3px;
+    padding: 2px 6px;
+    margin-right: 4px;
+    font-size: 0.9em;
+}

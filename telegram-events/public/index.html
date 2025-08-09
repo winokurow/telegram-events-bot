@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script await src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="/js/theme.js?v=2"></script>
+    <script src="/js/firebase-init.js"></script>
+    <script src="/js/app.js"></script>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <title>Add New Event</title>
+
+</head>
+<body>
+    <h1>Добавить новое мероприятие</h1>
+    <form id="addEventForm">
+        <!-- Event Name -->
+        <label>
+            Event Name:<br/>
+            <input type="text" id="eventName" required/>
+        </label>
+        <br/><br/>
+
+        <!-- Category (free text; must match an existing /categories doc to use custom chat IDs) -->
+        <label>
+            Category:<br/>
+            <input type="text" id="eventCategory" placeholder="e.g. Music, Sports" required/>
+        </label>
+        <br/><br/>
+
+        <!-- Tags (comma-separated) -->
+        <label>
+            Tags (comma-separated):<br/>
+            <input type="text" id="eventTags" placeholder="e.g. rock, indie, live"/>
+        </label>
+        <br/><br/>
+
+        <!-- Description -->
+        <label>
+            Description:<br/>
+            <textarea id="eventDescription" rows="4" placeholder="Short description..."></textarea>
+        </label>
+        <br/><br/>
+
+        <!-- Image -->
+        <label>
+            Picture (JPEG/PNG, max 5 MB):<br/>
+            <input type="file" id="eventImage" accept="image/*"/>
+        </label>
+        <br/><br/>
+
+        <!-- Start Date & Time -->
+        <label>
+            Start Date & Time:<br/>
+            <input type="datetime-local" id="eventStart" required/>
+        </label>
+        <br/><br/>
+
+        <!-- End Date & Time (if same as start, event is one-day) -->
+        <label>
+            End Date & Time:<br/>
+            <input type="datetime-local" id="eventEnd" required/>
+        </label>
+        <br/><br/>
+
+        <!-- Place -->
+        <label>
+            Place:<br/>
+            <input type="text" id="eventPlace" required placeholder="e.g. Berlin, FinTech Hub"/>
+        </label>
+        <br/><br/>
+
+        <!-- Price -->
+        <label>
+            Price:<br/>
+            <input type="text" id="eventPrice" placeholder="e.g. Free, €10–€20"/>
+        </label>
+        <br/><br/>
+
+        <!-- Link (URL) -->
+        <label>
+            More Info Link (URL):<br/>
+            <input type="url" id="eventLink" placeholder="https://example.com"/>
+        </label>
+        <br/><br/>
+
+        <!-- Contact -->
+        <label>
+            Contact (email/phone):<br/>
+            <input type="text" id="eventContact" placeholder="e.g. organizer@example.com"/>
+        </label>
+        <br/><br/>
+
+        <button type="submit">Submit Event</button>
+    </form>
+
+    <script>
+        // Make the Web App expand to full height
+        Telegram.WebApp.expand();
+
+        // Optionally hide the default back button
+        Telegram.WebApp.BackButton.hide();
+
+        // Set your own main button (at bottom) if desired
+        Telegram.WebApp.MainButton.setText("Submit Event");
+        // You can show it with Telegram.WebApp.MainButton.show();
+    </script>
+</body>
+</html>

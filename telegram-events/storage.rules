@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow anyone to upload an image under /eventImages/*
+    match /eventImages/{allPaths=**} {
+      // Max 5 MB, only image mime types
+      allow write: if request.resource.size < 5 * 1024 * 1024
+                    && (request.resource.contentType.matches('image/.*'));
+      allow read: if true;
+    }
+    // Deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

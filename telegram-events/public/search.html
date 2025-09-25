@@ -1,83 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/styles.css" />
-    <title>Search Events</title>
+    <!-- Firebase (compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <!-- Telegram & theme -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="/js/theme.js?v=2"></script>
-    <script src="/js/firebase-init.js"></script>
-    <script src="/js/app.js"></script>
+
+    <!-- Your Firebase init (defines firebase, db, storage) -->
+    <script src="/js/firebase-init.js?v=2"></script>
+
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <title>Поиск событий</title>
 </head>
 <body>
-<h1>Search Events</h1>
+<h1>Поиск мероприятий</h1>
+
 <form id="searchForm">
-    <!-- Keyword -->
     <label>
-        Keyword (in name or description):<br />
-        <input type="text" id="searchKeyword" placeholder="e.g. concert, workshop" />
+        Ключевые слова (в названии или описании):
+        <input type="text" id="searchKeyword" placeholder="например, концерт, мастер-класс" />
     </label>
-    <br /><br />
 
-    <!-- Category (populated dynamically) -->
     <label>
-        Category:<br />
-        <select id="searchCategory">
-            <!-- Options will be injected by app.js -->
-        </select>
+        Категория:
+        <select id="searchCategory"></select>
     </label>
-    <br /><br />
 
-    <!-- Tags (comma-separated) -->
     <label>
-        Tags (comma-separated):<br />
-        <input type="text" id="searchTags" placeholder="e.g. rock,free" />
+        Теги (через запятую):
+        <input type="text" id="searchTags" placeholder="например, rock, free" />
     </label>
-    <br /><br />
 
-    <!-- Date From / To -->
     <label>
-        Date From:<br />
+        Дата от:
         <input type="date" id="dateFrom" />
     </label>
-    <br /><br />
+
     <label>
-        Date To:<br />
+        Дата до:
         <input type="date" id="dateTo" />
     </label>
-    <br /><br />
 
-    <!-- Place (exact match) -->
     <label>
-        Place:<br />
-        <input type="text" id="searchPlace" placeholder="e.g. Berlin" />
+        Место:
+        <input type="text" id="searchPlace" placeholder="например, Berlin" />
     </label>
-    <br /><br />
 
-    <button type="submit">Search</button>
+    <button type="submit">Искать</button>
 </form>
 
-<hr />
+<div id="formError" class="error-banner" role="alert" style="display:none"></div>
 
-<div id="resultsContainer">
-    <!-- Results will appear here -->
-</div>
+<div id="resultsContainer" style="margin-top:16px;"></div>
+<!-- Categories dictionary (RU titles, EN ids) -->
+<script src="/js/categoriessearch.js"></script>
 
+<!-- Search page logic -->
+<script defer src="/js/search.js"></script>
 <script>
-    // Make the Web App expand to full height
-    Telegram.WebApp.expand();
-
-    // Optionally hide the default back button
-    Telegram.WebApp.BackButton.hide();
-
-    // Set your own main button (at bottom) if desired
-    Telegram.WebApp.MainButton.setText("Submit Event");
-    // You can show it with Telegram.WebApp.MainButton.show();
+    // Optional Telegram UX tweaks
+    try {
+        Telegram.WebApp.expand();
+        Telegram.WebApp.BackButton.hide();
+        Telegram.WebApp.MainButton.setText("Искать");
+    } catch (_) {}
 </script>
-
 </body>
 </html>

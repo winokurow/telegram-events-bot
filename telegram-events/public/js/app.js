@@ -7,83 +7,106 @@ document.addEventListener('DOMContentLoaded', () => {
     // --------------- ADD EVENT LOGIC (index.html) ---------------
     const addForm = document.getElementById('addEventForm');
     if (addForm) {
-        const nameInput       = document.getElementById('eventName');
-        const categoryInput   = document.getElementById('eventCategory');
-        const tagsInput       = document.getElementById('eventTags');
-        const descInput       = document.getElementById('eventDescription');
-        const imgInput        = document.getElementById('eventImage');
-        const startInput      = document.getElementById('eventStart');
-        const endInput        = document.getElementById('eventEnd');
-        const placeInput      = document.getElementById('eventPlace');
-        const priceInput      = document.getElementById('eventPrice');
-        const linkInput       = document.getElementById('eventLink');
-        const contactInput    = document.getElementById('eventContact');
+        const nameInput = document.getElementById('eventName');
+        const categorySelect = document.getElementById('category');
+        const tagsInput = document.getElementById('eventTags');
+        const descInput = document.getElementById('eventDescription');
+        const imgInput = document.getElementById('eventImage');
+        const startDateTimeInput = document.getElementById('eventStart');
+        const endDateInput = document.getElementById('endDate');
+        const endTimeInput = document.getElementById('endTime');
+        const placeInput = document.getElementById('eventPlace');
+        const priceInput = document.getElementById('eventPrice');
+        const linkInput = document.getElementById('eventLink');
+        const contactInput = document.getElementById('eventContact');
 
         addForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            hideErrorBanner();
+            setSubmitting(true)
+            try {
+                // 1. Collect & validate
+                const name = nameInput.value.trim();
+                let category = categorySelect.value;
+                const tagsRaw = tagsInput.value.trim();    // e.g. "rock, indie, live"
+                const startDateTimeStr = startDateTimeInput.value;
+                const description = descInput.value;
+                const place = placeInput.value.trim();
+                const price = priceInput.value.trim();
+                const link = linkInput.value.trim();
+                const contact = contactInput.value.trim();
 
-            // 1. Collect & validate
-            const name       = nameInput.value.trim();
-            const category   = categoryInput.value.trim();
-            const tagsRaw    = tagsInput.value.trim();    // e.g. "rock, indie, live"
-            const description= descInput.value.trim();
-            const startStr   = startInput.value;           // “YYYY-MM-DDTHH:MM”
-            const endStr     = endInput.value;
-            const place      = placeInput.value.trim();
-            const price      = priceInput.value.trim();
-            const link       = linkInput.value.trim();
-            const contact    = contactInput.value.trim();
+                const selectedCategoryId = categorySelect.value; // например "Cinema"
+                console.log("Selected category ID:", selectedCategoryId);
 
-            if (!name || !category || !startStr || !endStr || !place) {
-                alert('Please fill in all required fields (Name, Category, Start, End, Place).');
-                return;
-            }
-
-            // 2. Parse tags into array
-            const tagsArray = tagsRaw
-                ? tagsRaw.split(',').map(t => t.trim()).filter(t => t.length > 0)
-                : [];
-
-            // 3. Create a new Firestore doc reference (to get the ID before setting data)
-            const eventRef = db.collection('events').doc();
-            const newEventData = {
-                name,
-                category,
-                tags: tagsArray,
-                description,
-                place,
-                price,
-                link,
-                contact,
-                startDateTime: firebase.firestore.Timestamp.fromDate(new Date(startStr)),
-                endDateTime: firebase.firestore.Timestamp.fromDate(new Date(endStr)),
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            // 4. If image file selected, upload to Storage & add imageURL to newEventData
-            if (imgInput.files.length > 0) {
-                const file = imgInput.files[0];
-                // Unique path: eventImages/{docId}/{filename}
-                const storageRef = storage.ref(`eventImages/${eventRef.id}/${file.name}`);
-                try {
-                    const snapshot = await storageRef.put(file);
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-                    newEventData.imageURL = downloadURL;
-                } catch (upErr) {
-                    console.error('Error uploading image:', upErr);
-                    alert('Failed to upload image. Please check file size/type and try again.');
+                if (!name || !category || !startDateTimeStr || !place) {
+                    alert('Пожалуйста заполните все обязательные поля (Название, Категория, Дата начала).');
                     return;
                 }
-            }
 
-            // 5. Write the Firestore doc
-            try {
+                // 2. Parse tags into array
+                const tagsArray = tagsRaw
+                    ? tagsRaw.split(',').map(t => t.trim()).filter(t => t.length > 0)
+                    : [];
+
+                // 3. Create a new Firestore doc reference (to get the ID before setting data)
+                const eventRef = db.collection('events').doc();
+
+
+                const startDateTime = new Date(startDateTimeInput.value);
+
+                let endDateTime = null;
+                if (hasEnd && endDateInput) {
+                    // same builder logic as in the file:
+                    const parts = endDateInput.split('-'); // YYYY-MM-DD
+                    const y = +parts[0], m = +parts[1] - 1, d = +parts[2];
+                    let hh = 23, mm = 59;                // time optional → default to 23:59
+                    if (endTimeInput) {
+                        const t = endTimeInput.split(':');
+                        hh = +t[0];
+                        mm = +t[1];
+                    }
+                    endDateTime = new Date(y, m, d, hh, mm, 0, 0);
+                }
+                const newEventData = {
+                    name,
+                    category,
+                    tags: tagsArray,
+                    description,
+                    place,
+                    price,
+                    link,
+                    contact,
+                    startDateTime: firebase.firestore.Timestamp.fromDate(startDateTime),
+                    ...(endDateTime ? {endDateTime: firebase.firestore.Timestamp.fromDate(endDateTime)} : {})
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // 4. If image file selected, upload to Storage & add imageURL to newEventData
+                if (imgInput.files.length > 0) {
+                    const file = imgInput.files[0];
+                    // Unique path: eventImages/{docId}/{filename}
+                    const storageRef = storage.ref(`eventImages/${eventRef.id}/${file.name}`);
+                    try {
+                        const snapshot = await storageRef.put(file);
+                        const downloadURL = await snapshot.ref.getDownloadURL();
+                        newEventData.imageURL = downloadURL;
+                    } catch (upErr) {
+                        console.error('Error uploading image:', upErr);
+                        alert('Failed to upload image. Please check file size/type and try again.');
+                        return;
+                    }
+                }
+
+
                 await eventRef.set(newEventData);
                 alert('Event added successfully! It will be posted to Telegram shortly.');
                 addForm.reset();
             } catch (err) {
-                console.error('Error saving event:', err);
-                alert('Error saving event. Please try again.');
+                console.error('Submit error:', err);
+                showErrorBanner(humanizeError(err) || 'Не удалось отправить данные.');
+            } finally {
+                setSubmitting(false);
             }
         });
     }
@@ -93,12 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchForm) {
         // We’ll populate category dropdown dynamically from /categories
         const categorySelect = document.getElementById('searchCategory');
-        const tagsInput      = document.getElementById('searchTags');
-        const dateFromInput  = document.getElementById('dateFrom');
-        const dateToInput    = document.getElementById('dateTo');
-        const placeInput     = document.getElementById('searchPlace');
-        const keywordInput   = document.getElementById('searchKeyword');
-        const resultsDiv     = document.getElementById('resultsContainer');
+        const tagsInput = document.getElementById('searchTags');
+        const dateFromInput = document.getElementById('dateFrom');
+        const dateToInput = document.getElementById('dateTo');
+        const placeInput = document.getElementById('searchPlace');
+        const keywordInput = document.getElementById('searchKeyword');
+        const resultsDiv = document.getElementById('resultsContainer');
 
         // 1. Populate category dropdown
         (async () => {
@@ -128,13 +151,20 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             resultsDiv.innerHTML = '<p>Searching…</p>';
 
+            const eventName = document.getElementById('eventName').value.trim();
+            if (!eventName) {
+                alert('Введите название мероприятия.');
+                return;
+            }
+
+
             // Read filter values
             const selectedCategory = categorySelect.value.trim(); // exact match
-            const tagsRaw          = tagsInput.value.trim();      // e.g. "rock,live"
-            const dateFromStr      = dateFromInput.value;         // “YYYY-MM-DD”
-            const dateToStr        = dateToInput.value;
-            const placeVal         = placeInput.value.trim();
-            const keywordRaw       = keywordInput.value.trim().toLowerCase();
+            const tagsRaw = tagsInput.value.trim();      // e.g. "rock,live"
+            const dateFromStr = dateFromInput.value;         // “YYYY-MM-DD”
+            const dateToStr = dateToInput.value;
+            const placeVal = placeInput.value.trim();
+            const keywordRaw = keywordInput.value.trim().toLowerCase();
 
             // Build Firestore query step by step
             let query = db.collection('events');
@@ -195,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 // If passes, collect
-                matches.push({ id: doc.id, ...data });
+                matches.push({id: doc.id, ...data});
             });
 
             // 4. Display results
@@ -214,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let dateText = '';
                 if (ev.startDateTime && ev.startDateTime.toDate) {
                     const startDate = ev.startDateTime.toDate();
-                    const endDate   = ev.endDateTime && ev.endDateTime.toDate();
+                    const endDate = ev.endDateTime && ev.endDateTime.toDate();
                     if (endDate) {
                         // Same‐day?
                         if (
@@ -222,15 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             startDate.getMonth() === endDate.getMonth() &&
                             startDate.getDate() === endDate.getDate()
                         ) {
-                            const dateStr   = startDate.toLocaleDateString('en-US', { dateStyle: 'long' });
-                            const startTime = startDate.toLocaleTimeString('en-US', { timeStyle: 'short' });
-                            const endTime   = endDate.toLocaleTimeString('en-US', { timeStyle: 'short' });
+                            const dateStr = startDate.toLocaleDateString('en-US', {dateStyle: 'long'});
+                            const startTime = startDate.toLocaleTimeString('en-US', {timeStyle: 'short'});
+                            const endTime = endDate.toLocaleTimeString('en-US', {timeStyle: 'short'});
                             dateText = `${dateStr} · ${startTime} – ${endTime} (UTC)`;
                         } else {
                             const startStr = startDate.toLocaleString('en-US', {
                                 dateStyle: 'long', timeStyle: 'short'
                             });
-                            const endStr   = endDate.toLocaleString('en-US', {
+                            const endStr = endDate.toLocaleString('en-US', {
                                 dateStyle: 'long', timeStyle: 'short'
                             });
                             dateText = `${startStr} UTC – ${endStr} UTC`;
@@ -254,9 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Build innerHTML
                 const nameEsc = escapeHtml(ev.name || '');
-                const catEsc  = escapeHtml(ev.category || '');
-                const placeEsc= escapeHtml(ev.place || '');
-                const priceEsc= escapeHtml(ev.price || '');
+                const catEsc = escapeHtml(ev.category || '');
+                const placeEsc = escapeHtml(ev.place || '');
+                const priceEsc = escapeHtml(ev.price || '');
                 const descEsc = escapeHtml(ev.description || '');
                 const contactEsc = escapeHtml(ev.contact || '');
                 const linkEsc = ev.link

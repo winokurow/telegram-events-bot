@@ -60,7 +60,6 @@ input[type="datetime-local"],
 textarea,
 select {
     width: 100%;
-    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
@@ -103,4 +102,77 @@ button:hover {
     padding: 2px 6px;
     margin-right: 4px;
     font-size: 0.9em;
+}
+
+#addEventForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#searchForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+}
+
+input,
+select,
+textarea,
+button {
+    padding: 8px;
+    font-size: 1rem;
+}
+
+button {
+    background-color: #0088cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0077b3;
+}
+
+
+/* оформление ошибки */
+.field-error {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-top: 6px;
+    display: none;
+}
+.has-error {
+    border-color: #d32f2f !important;
+    outline: none;
+}
+
+.error-banner {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #fdecea;
+    color: #611a15;
+    border: 1px solid #f5c2c0;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+/* card image: fixed height, full width, crop overflow */
+.event-thumb {
+    width: 100%;
+    max-height: 220px;  /* cap height */
+    object-fit: contain;/* no crop; letterbox if needed */
+    display: block;
+    background: var(--card); /* optional neutral bg behind letterboxed areas */
+    border-radius: 4px;
 }

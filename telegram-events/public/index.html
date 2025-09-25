@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script await src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="/js/theme.js?v=2"></script>
-    <script src="/js/firebase-init.js"></script>
-    <script src="/js/app.js"></script>
+    <script defer src="/js/firebase-init.js?v=12"></script>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="/css/styles.css"/>
@@ -16,87 +16,79 @@
 </head>
 <body>
     <h1>Добавить новое мероприятие</h1>
-    <form id="addEventForm">
-        <!-- Event Name -->
+    <form id="addEventForm" novalidate>
         <label>
-            Event Name:<br/>
-            <input type="text" id="eventName" required/>
+            Название*:
+            <input type="text" id="eventName" data-label="Название" required/>
         </label>
-        <br/><br/>
 
-        <!-- Category (free text; must match an existing /categories doc to use custom chat IDs) -->
-        <label>
-            Category:<br/>
-            <input type="text" id="eventCategory" placeholder="e.g. Music, Sports" required/>
+        <label for="category">Категория*:
+            <select id="category" name="category"  data-label="Категория"  required></select>
         </label>
-        <br/><br/>
 
-        <!-- Tags (comma-separated) -->
+
         <label>
-            Tags (comma-separated):<br/>
+            Теги (через запятую):
             <input type="text" id="eventTags" placeholder="e.g. rock, indie, live"/>
         </label>
-        <br/><br/>
 
-        <!-- Description -->
         <label>
-            Description:<br/>
+            Описание:
             <textarea id="eventDescription" rows="4" placeholder="Short description..."></textarea>
         </label>
-        <br/><br/>
 
-        <!-- Image -->
         <label>
-            Picture (JPEG/PNG, max 5 MB):<br/>
+            Картинка (JPEG/PNG, max 5 MB):
             <input type="file" id="eventImage" accept="image/*"/>
         </label>
-        <br/><br/>
 
-        <!-- Start Date & Time -->
         <label>
-            Start Date & Time:<br/>
-            <input type="datetime-local" id="eventStart" required/>
+            Начало*:
+            <input type="datetime-local" id="eventStart" name="eventStart" required data-label="Startzeit">
         </label>
-        <br/><br/>
 
-        <!-- End Date & Time (if same as start, event is one-day) -->
         <label>
-            End Date & Time:<br/>
-            <input type="datetime-local" id="eventEnd" required/>
+            Дата окончания:
+            <input type="date" id="endDate" name="endDate" data-label="Enddatum">
         </label>
-        <br/><br/>
 
-        <!-- Place -->
         <label>
-            Place:<br/>
-            <input type="text" id="eventPlace" required placeholder="e.g. Berlin, FinTech Hub"/>
+            Время окончания:
+            <input type="time" id="endTime" name="endTime" data-label="Endzeit">
         </label>
-        <br/><br/>
-
-        <!-- Price -->
         <label>
-            Price:<br/>
-            <input type="text" id="eventPrice" placeholder="e.g. Free, €10–€20"/>
+            Место*:
+            <input type="text" id="eventPlace" required placeholder=""/>
         </label>
-        <br/><br/>
 
-        <!-- Link (URL) -->
         <label>
-            More Info Link (URL):<br/>
-            <input type="url" id="eventLink" placeholder="https://example.com"/>
+            Цена:
+            <input type="text" id="eventPrice" placeholder=""/>
         </label>
-        <br/><br/>
 
-        <!-- Contact -->
         <label>
-            Contact (email/phone):<br/>
+            Ссылка:
+            <input type="text" id="eventLink" placeholder="https://example.com"/>
+        </label>
+
+        <label>
+            Контакты:
             <input type="text" id="eventContact" placeholder="e.g. organizer@example.com"/>
         </label>
-        <br/><br/>
 
-        <button type="submit">Submit Event</button>
+        <label class="inline">
+            <input type="checkbox" id="skipTelegram" name="skipTelegram">
+            Не публиковать в Telegram
+        </label>
+
+        <button type="submit">Добавить</button>
     </form>
 
+    <div id="formError" class="error-banner" role="alert" style="display:none"></div>
+    <script src="/js/categories.js"></script>
+    <script src="/js/datetime-logic.js"></script>
+    <script src="/js/insert.js"></script>
+    <script src="/js/validation-ru.js"></script>
     <script>
         // Make the Web App expand to full height
         Telegram.WebApp.expand();
@@ -108,5 +100,6 @@
         Telegram.WebApp.MainButton.setText("Submit Event");
         // You can show it with Telegram.WebApp.MainButton.show();
     </script>
+
 </body>
 </html>

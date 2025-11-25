@@ -1,105 +1,143 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <head>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"
+    ></script>
     <script await src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="/js/theme.js?v=2"></script>
     <script defer src="/js/firebase-init.js?v=12"></script>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="/css/styles.css"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
     <title>Add New Event</title>
-
-</head>
-<body>
+  </head>
+  <body>
     <h1>Добавить новое мероприятие</h1>
     <form id="addEventForm" novalidate>
-        <label>
-            Название*:
-            <input type="text" id="eventName" data-label="Название" required/>
-        </label>
+      <label>
+        Название*:
+        <input type="text" id="eventName" data-label="Название" required />
+      </label>
 
-        <label for="category">Категория*:
-            <select id="category" name="category"  data-label="Категория"  required></select>
-        </label>
+      <label for="category"
+        >Категория*:
+        <select
+          id="category"
+          name="category"
+          data-label="Категория"
+          required
+        ></select>
+      </label>
 
+      <label>
+        Теги (через запятую):
+        <input
+          type="text"
+          id="eventTags"
+          placeholder="e.g. rock, indie, live"
+        />
+      </label>
 
-        <label>
-            Теги (через запятую):
-            <input type="text" id="eventTags" placeholder="e.g. rock, indie, live"/>
-        </label>
+      <label>
+        Описание:
+        <textarea
+          id="eventDescription"
+          rows="4"
+          placeholder="Short description..."
+        ></textarea>
+      </label>
 
-        <label>
-            Описание:
-            <textarea id="eventDescription" rows="4" placeholder="Short description..."></textarea>
-        </label>
+      <label>
+        Картинка (JPEG/PNG, max 5 MB):
+        <input type="file" id="eventImage" accept="image/*" />
+      </label>
 
-        <label>
-            Картинка (JPEG/PNG, max 5 MB):
-            <input type="file" id="eventImage" accept="image/*"/>
-        </label>
+      <label>
+        Начало*:
+        <input
+          type="datetime-local"
+          id="eventStart"
+          name="eventStart"
+          required
+          data-label="Startzeit"
+        />
+      </label>
 
-        <label>
-            Начало*:
-            <input type="datetime-local" id="eventStart" name="eventStart" required data-label="Startzeit">
-        </label>
+      <label>
+        Дата окончания:
+        <input type="date" id="endDate" name="endDate" data-label="Enddatum" />
+      </label>
 
-        <label>
-            Дата окончания:
-            <input type="date" id="endDate" name="endDate" data-label="Enddatum">
-        </label>
+      <label>
+        Время окончания:
+        <input type="time" id="endTime" name="endTime" data-label="Endzeit" />
+      </label>
+      <label>
+        Место*:
+        <input type="text" id="eventPlace" required placeholder="" />
+      </label>
 
-        <label>
-            Время окончания:
-            <input type="time" id="endTime" name="endTime" data-label="Endzeit">
-        </label>
-        <label>
-            Место*:
-            <input type="text" id="eventPlace" required placeholder=""/>
-        </label>
+      <label>
+        Цена:
+        <input type="text" id="eventPrice" placeholder="" />
+      </label>
 
-        <label>
-            Цена:
-            <input type="text" id="eventPrice" placeholder=""/>
-        </label>
+      <label>
+        Ссылка:
+        <input type="text" id="eventLink" placeholder="https://example.com" />
+      </label>
 
-        <label>
-            Ссылка:
-            <input type="text" id="eventLink" placeholder="https://example.com"/>
-        </label>
+      <label>
+        Контакты:
+        <input
+          type="text"
+          id="eventContact"
+          placeholder="e.g. organizer@example.com"
+        />
+      </label>
 
-        <label>
-            Контакты:
-            <input type="text" id="eventContact" placeholder="e.g. organizer@example.com"/>
-        </label>
+      <label class="inline">
+        <input type="checkbox" id="skipTelegram" name="skipTelegram" />
+        Не публиковать в Telegram
+      </label>
 
-        <label class="inline">
-            <input type="checkbox" id="skipTelegram" name="skipTelegram">
-            Не публиковать в Telegram
-        </label>
-
-        <button type="submit">Добавить</button>
+      <button type="submit">Добавить</button>
     </form>
 
-    <div id="formError" class="error-banner" role="alert" style="display:none"></div>
+    <div
+      id="formError"
+      class="error-banner"
+      role="alert"
+      style="display: none"
+    ></div>
     <script src="/js/categories.js"></script>
     <script src="/js/datetime-logic.js"></script>
     <script src="/js/insert.js"></script>
     <script src="/js/validation-ru.js"></script>
     <script>
-        // Make the Web App expand to full height
-        Telegram.WebApp.expand();
+      // Make the Web App expand to full height
+      Telegram.WebApp.expand();
 
-        // Optionally hide the default back button
-        Telegram.WebApp.BackButton.hide();
+      // Optionally hide the default back button
+      Telegram.WebApp.BackButton.hide();
 
-        // Set your own main button (at bottom) if desired
-        Telegram.WebApp.MainButton.setText("Submit Event");
-        // You can show it with Telegram.WebApp.MainButton.show();
+      // Set your own main button (at bottom) if desired
+      Telegram.WebApp.MainButton.setText("Submit Event");
+      // You can show it with Telegram.WebApp.MainButton.show();
     </script>
-
-</body>
+  </body>
 </html>

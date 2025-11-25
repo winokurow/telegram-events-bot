@@ -1,77 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-    <!-- Firebase (compat) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-
-    <!-- Telegram & theme -->
+  <head>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"
+    ></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="/js/theme.js?v=2"></script>
+    <script defer src="/js/theme.js?v=2"></script>
 
     <!-- Your Firebase init (defines firebase, db, storage) -->
-    <script src="/js/firebase-init.js?v=2"></script>
+    <script defer src="/js/firebase-init.js?v=13"></script>
 
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/styles.css" />
 
     <title>Поиск событий</title>
-</head>
-<body>
-<h1>Поиск мероприятий</h1>
+  </head>
+  <body>
+    <h1>Поиск мероприятий</h1>
 
-<form id="searchForm">
-    <label>
+    <form id="searchForm">
+      <label>
         Ключевые слова (в названии или описании):
-        <input type="text" id="searchKeyword" placeholder="например, концерт, мастер-класс" />
-    </label>
+        <input
+          type="text"
+          id="searchKeyword"
+          placeholder="например, концерт, мастер-класс"
+        />
+      </label>
 
-    <label>
+      <label>
         Категория:
         <select id="searchCategory"></select>
-    </label>
+      </label>
 
-    <label>
+      <label>
         Теги (через запятую):
         <input type="text" id="searchTags" placeholder="например, rock, free" />
-    </label>
+      </label>
 
-    <label>
+      <label>
         Дата от:
         <input type="date" id="dateFrom" />
-    </label>
+      </label>
 
-    <label>
+      <label>
         Дата до:
         <input type="date" id="dateTo" />
-    </label>
+      </label>
 
-    <label>
+      <label>
         Место:
         <input type="text" id="searchPlace" placeholder="например, Berlin" />
-    </label>
+      </label>
 
-    <button type="submit">Искать</button>
-</form>
+      <button type="submit">Искать</button>
+    </form>
 
-<div id="formError" class="error-banner" role="alert" style="display:none"></div>
+    <div
+      id="formError"
+      class="error-banner"
+      role="alert"
+      style="display: none"
+    ></div>
 
-<div id="resultsContainer" style="margin-top:16px;"></div>
-<!-- Categories dictionary (RU titles, EN ids) -->
-<script src="/js/categoriessearch.js"></script>
+    <div id="resultsContainer" style="margin-top: 16px"></div>
+    <!-- Categories dictionary (RU titles, EN ids) -->
+    <script src="/js/categoriessearch.js"></script>
 
-<!-- Search page logic -->
-<script defer src="/js/search.js"></script>
-<script>
-    // Optional Telegram UX tweaks
-    try {
+    <!-- Search page logic -->
+    <script defer src="/js/search.js"></script>
+    <script>
+      // Optional Telegram UX tweaks
+      try {
         Telegram.WebApp.expand();
         Telegram.WebApp.BackButton.hide();
         Telegram.WebApp.MainButton.setText("Искать");
-    } catch (_) {}
-</script>
-</body>
+      } catch (_) {}
+    </script>
+  </body>
 </html>

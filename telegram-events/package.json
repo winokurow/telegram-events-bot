@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier -w .",
+    "test": "jest --passWithNoTests",
+    "test:unit": "jest -c jest.unit.config.js",
+    "test:int": "firebase emulators:exec --only firestore,functions \"jest -c jest.int.config.js\"",
+    "build:functions": "npm --prefix functions run build",
+    "deploy:preview": "firebase hosting:channel:deploy pr-$GITHUB_RUN_NUMBER --json",
+    "deploy:prod": "firebase deploy --only hosting,functions"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@types/jest": "^29.5.12",
+    "eslint": "^9.36.0",
+    "globals": "^16.4.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.0",
+    "ts-jest": "^29.2.5"
+  }
+}

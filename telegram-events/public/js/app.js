@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     link,
                     contact,
                     startDateTime: firebase.firestore.Timestamp.fromDate(startDateTime),
-                    ...(endDateTime ? {endDateTime: firebase.firestore.Timestamp.fromDate(endDateTime)} : {})
+                    ...(endDateTime ? {endDateTime: firebase.firestore.Timestamp.fromDate(endDateTime)} : {}),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
